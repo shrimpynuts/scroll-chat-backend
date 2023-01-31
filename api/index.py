@@ -1,12 +1,10 @@
 import os
-from flask import Flask
-# This is the first simple example from the blog post that processes data
-# from Wikipedia and does not use orchestration
 import requests
 from bs4 import BeautifulSoup
 from bs4.element import Comment
-
 import pickle
+import time
+from flask import Flask, jsonify
 
 from langchain.llms import OpenAI
 from langchain.chains.qa_with_sources import load_qa_with_sources_chain
@@ -113,8 +111,15 @@ def home():
 
 @app.route('/api/get_answer', methods=['POST'])
 def get_answer():
+    st = time.time()
     chain = load_qa_with_sources_chain(OpenAI(temperature=0))
     data = request.get_json()
     question = data['question']
     answer = generate_answer(question, source_index, chain)
-    return f'Question: ${question}\\n\\n, ${answer}!'
+    et = time.time()
+    time_elapsed = et - st
+    return jsonify(
+        question=question,
+        answer=answer,
+        time_elapsed=time_elapsed
+    )
