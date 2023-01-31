@@ -12,9 +12,11 @@ import pickle
 import time
 from flask import Flask, jsonify, request
 import os
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 
-load_dotenv(find_dotenv())
+load_dotenv()
+openai_api_key = os.getenv("OPENAI_API_KEY")
+print(openai_api_key)
 
 
 class Page:
@@ -43,8 +45,6 @@ def tag_visible(element):
         return False
     return True
 
-# Fetch all the text from a page
-
 
 def fetchPageContent(url):
     r = requests.get(url)
@@ -53,11 +53,8 @@ def fetchPageContent(url):
     visible_texts = filter(tag_visible, texts)
     return u" ".join(t.strip() for t in visible_texts)
 
-# Fetch the content of all pages
-
 
 def fetchAllPages(url):
-    #  = 'https://guide.scroll.io/'
     pages = fetchPages(url)
     return [Page(page, fetchPageContent(page)) for page in pages]
 
@@ -105,7 +102,7 @@ file.close()
 
 @app.route('/')
 def home():
-    return "Hello, World!"
+    return f"Hello, World! {openai_api_key}"
 
 
 @app.route('/api/get_answer', methods=['POST'])
