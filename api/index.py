@@ -90,7 +90,7 @@ def generate_answer(question, index, chain):
 
 
 app = Flask(__name__)
-file = open('search_index_new.pickle', 'rb')
+file = open('search_index.pickle', 'rb')
 source_index = pickle.load(file)
 file.close()
 
