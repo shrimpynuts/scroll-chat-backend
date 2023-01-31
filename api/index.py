@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 import pickle
 import time
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 from langchain.llms import OpenAI
 from langchain.chains.qa_with_sources import load_qa_with_sources_chain
