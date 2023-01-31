@@ -83,6 +83,18 @@ def store_search_index(search_index, file_name):
         pickle.dump(search_index, f)
 
 
+def generate_answer(question, index, chain):
+    return (
+        chain(
+            {
+                "input_documents": index.similarity_search(question, k=4),
+                "question": question,
+            },
+            return_only_outputs=True,
+        )["output_text"]
+    )
+
+
 app = Flask(__name__)
 file = open('search_index.pickle', 'rb')
 source_index = pickle.load(file)
@@ -91,26 +103,18 @@ file.close()
 # pages = fetchAllPages('https://guide.scroll.io')
 # source_docs = [Document(page_content=page.text, metadata={
 #                         "source": page.url}) for page in pages]
-
 # source_index = generate_search_index(source_docs)
 
 
 @app.route('/')
 def home():
-    # store_search_index(source_index, "search_index2.pickle")
+    return "Hello, World!"
+
+
+@app.route('/api/get_answer', methods=['POST'])
+def get_answer():
     chain = load_qa_with_sources_chain(OpenAI(temperature=0))
-
-    def get_answer(question, index):
-        return (
-            chain(
-                {
-                    "input_documents": index.similarity_search(question, k=4),
-                    "question": question,
-                },
-                return_only_outputs=True,
-            )["output_text"]
-        )
-    question = "How does Scroll work?"
-    answer = get_answer(question, source_index)
-
-    return f'Question: ${question}\n\n, ${answer}!'
+    data = request.get_json()
+    question = data['question']
+    answer = generate_answer(question, source_index, chain)
+    return f'Question: ${question}\\n\\n, ${answer}!'
