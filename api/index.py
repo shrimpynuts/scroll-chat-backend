@@ -102,7 +102,7 @@ file.close()
 
 @app.route('/')
 def home():
-    return f"Hello, World! {openai_api_key}"
+    return "Hello, World!"
 
 
 @app.route('/api/get_answer', methods=['POST'])
