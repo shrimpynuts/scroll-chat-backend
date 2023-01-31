@@ -1,3 +1,9 @@
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.vectorstores.faiss import FAISS
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.docstore.document import Document
+from langchain.chains.qa_with_sources import load_qa_with_sources_chain
+from langchain.llms import OpenAI
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -5,13 +11,10 @@ from bs4.element import Comment
 import pickle
 import time
 from flask import Flask, jsonify, request
+import os
+from dotenv import load_dotenv, find_dotenv
 
-from langchain.llms import OpenAI
-from langchain.chains.qa_with_sources import load_qa_with_sources_chain
-from langchain.docstore.document import Document
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores.faiss import FAISS
-from langchain.text_splitter import CharacterTextSplitter
+load_dotenv(find_dotenv())
 
 
 class Page:
@@ -21,10 +24,6 @@ class Page:
 
     def __str__(self):
         return f"{self.url}:\n{self.text}\n)"
-
-
-API_KEY = "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"
-os.environ['OPENAI_API_KEY'] = API_KEY
 
 
 def fetchPages(url):
