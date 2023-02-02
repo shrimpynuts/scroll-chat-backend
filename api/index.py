@@ -5,9 +5,11 @@ import time
 from flask import Flask, jsonify, request
 
 
+pickle_filename = 'search_index_full_website.pickle'
+
 st = time.time()
 app = Flask(__name__)
-file = open('search_index.pickle', 'rb')
+file = open(pickle_filename, 'rb')
 source_index = pickle.load(file)
 file.close()
 print(time.time() - st)
