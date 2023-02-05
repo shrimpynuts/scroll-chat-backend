@@ -5,7 +5,7 @@ import time
 from flask import Flask, jsonify, request
 
 
-pickle_filename = 'search_index_website_and_twitter.pickle'
+pickle_filename = 'search_index.pickle'
 
 st = time.time()
 app = Flask(__name__)
