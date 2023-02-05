@@ -43,6 +43,7 @@ def get_answer():
     et = time.time()
     time_elapsed = et - st
     return jsonify(
+        documents=documents,
         question=question,
         answer=answer,
         time_elapsed=time_elapsed
