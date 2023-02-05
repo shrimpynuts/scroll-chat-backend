@@ -39,11 +39,12 @@ def get_answer():
     data = request.get_json()
     question = data['question']
     documents = source_index.similarity_search(question, k=4)
+    source_metadata = [document.metadata for document in documents]
     answer = generate_answer(question, documents, chain)
     et = time.time()
     time_elapsed = et - st
     return jsonify(
-        documents=documents,
+        source_metadata=source_metadata,
         question=question,
         answer=answer,
         time_elapsed=time_elapsed
