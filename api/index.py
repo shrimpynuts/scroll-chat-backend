@@ -15,11 +15,11 @@ file.close()
 print(time.time() - st)
 
 
-def generate_answer(question, index, chain):
+def generate_answer(question, documents, chain):
     return (
         chain(
             {
-                "input_documents": index.similarity_search(question, k=4),
+                "input_documents": documents,
                 "question": question,
             },
             return_only_outputs=True,
@@ -38,7 +38,8 @@ def get_answer():
     chain = load_qa_with_sources_chain(OpenAI(temperature=0))
     data = request.get_json()
     question = data['question']
-    answer = generate_answer(question, source_index, chain)
+    documents = source_index.similarity_search(question, k=4)
+    answer = generate_answer(question, documents, chain)
     et = time.time()
     time_elapsed = et - st
     return jsonify(
